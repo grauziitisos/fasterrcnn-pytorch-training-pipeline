@@ -14,7 +14,7 @@ from torchvision.models.detection import FasterRCNN
 from torchvision.models.detection.rpn import AnchorGenerator
 
 try:
-    from vision_transformers.models.mobile_vit import mobilevit_xxs
+    from vision_transformers.models.mobile_vit import mobilevit_s
 except:
     print('Please intall Vision Transformers to use MobileViT backbones')
     print('You can do pip install vision_transformers')
@@ -24,7 +24,7 @@ except:
 
 def create_model(num_classes, pretrained=True, coco_model=False, device='cpu'):
     # Load the backbone.
-    model_backbone = mobilevit_xxs(pretrained=pretrained, map_location=torch.device(device))
+    model_backbone = mobilevit_s(pretrained=pretrained, device='cpu')
 
     backbone = nn.Sequential(*list(model_backbone.children())[:-1])
 
