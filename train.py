@@ -215,7 +215,7 @@ def parse_opt():
         dest='pretrained',
         default=True,
         help='whether to load pretrained model seed',
-        type=str
+        type=bool
     )    
 
     args = vars(parser.parse_args())
