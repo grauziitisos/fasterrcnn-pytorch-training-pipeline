@@ -209,6 +209,13 @@ def parse_opt():
               --project-dir will be named if not already present',
         type=str
     )
+    
+    parser.add_argument(
+        '--pretrained',
+        default=True,
+        help='whether to load pretrained model seed',
+        type=str
+    )    
 
     args = vars(parser.parse_args())
     return args
@@ -235,6 +242,7 @@ def main(args):
     NUM_CLASSES = data_configs['NC']
     NUM_WORKERS = args['workers']
     DEVICE = torch.device(args['device'])
+    PRETRAINED= args['pretrained']
     print("device",DEVICE)
     NUM_EPOCHS = args['epochs']
     SAVE_VALID_PREDICTIONS = data_configs['SAVE_VALID_PREDICTION_IMAGES']
@@ -310,7 +318,7 @@ def main(args):
     if args['weights'] is None:
         print('Building model from scratch...')
         build_model = create_model[args['model']]
-        model = build_model(num_classes=NUM_CLASSES, pretrained=True, device=DEVICE)
+        model = build_model(num_classes=NUM_CLASSES, pretrained=PRETRAINED, device=DEVICE)
 
     # Load pretrained weights if path is provided.
     if args['weights'] is not None:
