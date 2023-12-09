@@ -8,7 +8,9 @@ from torch_utils import utils
 from torch_utils.coco_eval import CocoEvaluator
 from torch_utils.coco_utils import get_coco_api_from_dataset
 from utils.general import save_validation_results
+import logging
 import numpy as np
+from datetime import datetime
 def train_one_epoch(
     model, 
     optimizer, 
@@ -43,6 +45,8 @@ def train_one_epoch(
 
     step_counter = 0
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
+        if(step_counter % 10 == 0):
+            logging.info(f"Time: {datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}")
         step_counter += 1
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device).to(torch.int64) for k, v in t.items()} for t in targets]
