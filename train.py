@@ -310,7 +310,7 @@ def main(args):
     if args['weights'] is None:
         print('Building model from scratch...')
         build_model = create_model[args['model']]
-        model = build_model(num_classes=NUM_CLASSES, pretrained=True)
+        model = build_model(num_classes=NUM_CLASSES, pretrained=True, map_location=DEVICE)
 
     # Load pretrained weights if path is provided.
     if args['weights'] is not None:

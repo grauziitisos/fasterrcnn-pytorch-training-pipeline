@@ -185,10 +185,10 @@ def return_fasterrcnn_vitdet_tiny(
     return model
 
 def return_fasterrcnn_mobilevit_xxs(
-    num_classes, pretrained=True, coco_model=False
+    num_classes, pretrained=True, coco_model=False, device='cpu'
 ):
     model = fasterrcnn_mobilevit_xxs.create_model(
-        num_classes, pretrained, coco_model=coco_model
+        num_classes, pretrained, coco_model=coco_model, device=device
     )
     return model
 

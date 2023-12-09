@@ -21,9 +21,9 @@ except:
     print('https://github.com/sovit-123/vision_transformers')
     assert ('vision_transformers' in sys.modules), 'vision_transformers not found'
 
-def create_model(num_classes, pretrained=True, coco_model=False):
+def create_model(num_classes, pretrained=True, coco_model=False, device='cpu'):
     # Load the backbone.
-    model_backbone = mobilevit_xxs(pretrained=pretrained)
+    model_backbone = mobilevit_xxs(pretrained=pretrained, map_location=torch.device(device))
 
     backbone = nn.Sequential(*list(model_backbone.children())[:-1])
 
