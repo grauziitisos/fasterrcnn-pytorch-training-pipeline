@@ -24,7 +24,7 @@ except:
 
 def create_model(num_classes, pretrained=True, coco_model=False, device='cpu'):
     # Load the backbone.
-    model_backbone = mobilevit_s(100, pretrained=pretrained, device='cpu')
+    model_backbone = mobilevit_xxs(100, pretrained=pretrained, device='cpu')
 
     backbone = nn.Sequential(*list(model_backbone.children())[:-1])
 
