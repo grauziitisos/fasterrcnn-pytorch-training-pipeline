@@ -45,8 +45,8 @@ def train_one_epoch(
 
     step_counter = 0
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
-        if(step_counter % 10 == 0):
-            print("Time: "+ datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+        if(step_counter % 30 == 0):
+            print("Time: "+ datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + " num: "+str(step_counter))
         step_counter += 1
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device).to(torch.int64) for k, v in t.items()} for t in targets]
@@ -138,8 +138,8 @@ def evaluate(
 
     counter = 0
     for images, targets in metric_logger.log_every(data_loader, 100, header):
-        if(counter % 10 == 0):
-            print("Time: "+ datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+        if(counter % 30 == 0):
+            print("Time: "+ datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + " num: "+str(counter))
         counter += 1
         images = list(img.to(device) for img in images)
 
