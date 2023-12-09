@@ -4,6 +4,8 @@ import numpy as np
 import os
 import glob as glob
 import random
+from torchvision.utils import save_image
+from datetime import datetime
 
 from xml.etree import ElementTree as et
 from torch.utils.data import Dataset, DataLoader
@@ -28,7 +30,8 @@ class CustomDataset(Dataset):
         use_train_aug=False,
         train=False, 
         mosaic=1.0,
-        square_training=False
+        square_training=False,
+        debug_save_image_0=False
     ):
         self.transforms = transforms
         self.use_train_aug = use_train_aug
@@ -44,6 +47,7 @@ class CustomDataset(Dataset):
         self.log_annot_issue_x = True
         self.mosaic = mosaic
         self.log_annot_issue_y = True
+        self.debug_save_image_0 = debug_save_image_0
         
         # get all the image paths in sorted order
         for file_type in self.image_file_types:
@@ -283,6 +287,7 @@ class CustomDataset(Dataset):
 
         if self.train: 
             mosaic_prob = random.uniform(0.0, 1.0)
+            mosaic_prob = 9999
             if self.mosaic >= mosaic_prob:
                 image_resized, boxes, labels, \
                     area, iscrowd, dims = self.load_cutmix_image_and_boxes(
@@ -319,8 +324,31 @@ class CustomDataset(Dataset):
 
         # Fix to enable training without target bounding boxes,
         # see https://discuss.pytorch.org/t/fasterrcnn-images-with-no-objects-present-cause-an-error/117974/4
+        doSaveImage0 = True
         if np.isnan((target['boxes']).numpy()).any() or target['boxes'].shape == torch.Size([0]):
             target['boxes'] = torch.zeros((0, 4), dtype=torch.int64)
+            doSaveImage0 = False
+        #print(skip)
+        #print(self.all_images[image_id])
+        doSaveImage0= self.debug_save_image_0 and doSaveImage0
+        if doSaveImage0:
+            printi = image_resized[0] #.numpy()
+            timestr = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            save_image(printi, "debug_images\\"+self.all_images[image_id]+"_"+timestr+".png")
+            printi = cv2.imread("debug_images\\"+self.all_images[image_id]+"_"+timestr+".png")
+            for i in range(target['boxes'].size(0)):
+                box = target['boxes'][i, :]
+                cv2.rectangle(printi, (int(box[0]), int(box[1])), (int(box[2]), int(box[3])), (255, 255, 0), 4)
+
+                label = f"v"
+                cv2.putText(printi, label,
+                    (int(box[0]) + 20, int(box[1]) + 40),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,  # font scale
+                    (255, 0, 255),
+                    2)  # line type
+            path = "debug_images\\"+self.all_images[image_id]+"_"+timestr+"_zz_"+".png"
+            cv2.imwrite(path, printi)
         return image_resized, target
 
     def __len__(self):
@@ -341,7 +369,8 @@ def create_train_dataset(
     classes,
     use_train_aug=False,
     mosaic=1.0,
-    square_training=False
+    square_training=False,
+    debug_save_image_0=False
 ):
     train_dataset = CustomDataset(
         train_dir_images, 
@@ -352,7 +381,8 @@ def create_train_dataset(
         use_train_aug=use_train_aug,
         train=True, 
         mosaic=mosaic,
-        square_training=square_training
+        square_training=square_training,
+        debug_save_image_0=debug_save_image_0
     )
     return train_dataset
 def create_valid_dataset(

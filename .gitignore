@@ -13,3 +13,4 @@ wandb/*
 
 # IPython checkpoints
 .ipynb_checkpoints
+/debug_images

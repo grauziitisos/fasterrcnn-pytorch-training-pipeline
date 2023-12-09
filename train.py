@@ -57,22 +57,27 @@ RANK = int(os.getenv('RANK', -1))
 # For same annotation colors each time.
 np.random.seed(42)
 
+#whether to save channel 0 image from net (B grayscaled) with boxes 4 debug purposes
+#folder: debug_images
+__DEBUG_SAVE_CH_0_RES_IMAGES__ = False
+
 def parse_opt():
     # Construct the argument parser.
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-m', '--model', 
-        default='fasterrcnn_resnet50_fpn_v2',
+        #default='fasterrcnn_resnet50_fpn_v2',
+        default='fasterrcnn_mini_darknet',
         help='name of the model'
     )
     parser.add_argument(
         '--data', 
-        default=None,
+        default='sign.yaml',
         help='path to the data config file'
     )
     parser.add_argument(
         '-d', '--device', 
-        default='cuda',
+        default='cpu',
         help='computation/training device, default is GPU if GPU present'
     )
     parser.add_argument(
@@ -107,7 +112,7 @@ def parse_opt():
     )
     parser.add_argument(
         '-n', '--name', 
-        default=None, 
+        default='mini_darknet', 
         type=str, 
         help='training result dir name in outputs/training/, (default res_#)'
     )
@@ -175,6 +180,7 @@ def parse_opt():
     parser.add_argument(
         '-dw', '--disable-wandb',
         dest="disable_wandb",
+        default=True,
         action='store_true',
         help='whether to use the wandb'
     )
@@ -253,7 +259,8 @@ def main(args):
         CLASSES,
         use_train_aug=args['use_train_aug'],
         mosaic=args['mosaic'],
-        square_training=args['square_training']
+        square_training=args['square_training'],
+        debug_save_image_0=__DEBUG_SAVE_CH_0_RES_IMAGES__
     )
     valid_dataset = create_valid_dataset(
         VALID_DIR_IMAGES, 
