@@ -435,7 +435,24 @@ def main(args):
             scheduler=scheduler,
             scaler=SCALER
         )
-
+        # Save the current epoch model state. This can be used 
+        # to resume training. It saves model state dict, number of
+        # epochs trained for, optimizer state dict, and loss function.
+        save_model(
+            epoch, 
+            model, 
+            optimizer, 
+            train_loss_list, 
+            train_loss_list_epoch,
+            val_map,
+            val_map_05,
+            OUT_DIR,
+            data_configs,
+            args['model']
+        )
+        # Save the model dictionary only for the current epoch.
+        save_model_state(model, OUT_DIR, data_configs, args['model'])
+        
         stats, val_pred_image = evaluate(
             model, 
             valid_loader, 
@@ -549,23 +566,7 @@ def main(args):
                 IMAGE_SIZE
             )
 
-        # Save the current epoch model state. This can be used 
-        # to resume training. It saves model state dict, number of
-        # epochs trained for, optimizer state dict, and loss function.
-        save_model(
-            epoch, 
-            model, 
-            optimizer, 
-            train_loss_list, 
-            train_loss_list_epoch,
-            val_map,
-            val_map_05,
-            OUT_DIR,
-            data_configs,
-            args['model']
-        )
-        # Save the model dictionary only for the current epoch.
-        save_model_state(model, OUT_DIR, data_configs, args['model'])
+
         # Save best model if the current mAP @0.5:0.95 IoU is
         # greater than the last hightest.
         save_best_model(
