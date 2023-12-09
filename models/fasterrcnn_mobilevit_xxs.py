@@ -14,7 +14,7 @@ from torchvision.models.detection import FasterRCNN
 from torchvision.models.detection.rpn import AnchorGenerator
 
 try:
-    from .vision_transformers.vision_transformers.models.mobile_vit import mobilevit_s
+    from .vision_transformers.vision_transformers.models.mobile_vit import mobilevit_xxs
 except:
     print('Please intall Vision Transformers to use MobileViT backbones')
     print('You can do pip install vision_transformers')
