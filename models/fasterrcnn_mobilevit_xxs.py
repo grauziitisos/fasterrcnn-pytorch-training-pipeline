@@ -8,6 +8,7 @@ https://github.com/sovit-123/vision_transformers
 import torchvision
 import torch.nn as nn
 import sys
+import torch
 
 from torchvision.models.detection import FasterRCNN
 from torchvision.models.detection.rpn import AnchorGenerator
